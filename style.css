@@ -1,0 +1,341 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    /* Critical for preventing scroll on drag */
+}
+
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Let touches pass through to canvas but keep UI visible */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+#score {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 5px black;
+}
+
+#start-screen,
+#game-over-screen {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    border-radius: 10px;
+    pointer-events: auto;
+    /* Re-enable clicks for buttons/start */
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    /* More techno feel */
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    color: #fff;
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-text-fill-color: initial;
+}
+
+p {
+    font-size: 1.5rem;
+    color: #ccffff;
+    text-shadow: 0 0 5px #00ffff;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#score {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Courier New', Courier, monospace;
+    color: #fff;
+    font-size: 32px;
+    text-shadow: 0 0 10px #00ffff;
+    width: 100%;
+    text-align: center;
+}
+
+#win-screen {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    border: 2px solid #00ff00;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 100;
+}
+
+/* Animations */
+@keyframes shake {
+    0% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+    }
+
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+
+    40% {
+        transform: translate(1px, -1px) rotate(1deg);
+    }
+
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+    }
+
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+    }
+
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+
+    90% {
+        transform: translate(1px, 2px) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+    }
+}
+
+.neon-btn {
+    background: transparent;
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+    text-shadow: 0 0 5px #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.neon-btn svg {
+    filter: drop-shadow(0 0 2px #00ffff);
+    transition: transform 0.3s ease;
+}
+
+.neon-btn:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 20px #00ffff, inset 0 0 10px #00ffff;
+    transform: scale(1.05);
+}
+
+.neon-btn:hover svg {
+    transform: rotate(15deg);
+    /* Playful icon tilt */
+}
+
+/* Specific styling for the primary start button */
+#start-btn {
+    border-color: #00ff00;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    font-size: 1.4rem;
+    /* Larger */
+}
+
+#start-btn:hover {
+    background: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 20px #00ff00, inset 0 0 10px #00ff00;
+}
+
+#start-btn svg {
+    filter: drop-shadow(0 0 2px #00ff00);
+}
+
+/* Restart button specific */
+#restart-btn:hover svg {
+    transform: rotate(180deg);
+    /* Spin the reload icon */
+}
+
+.shake-effect {
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+}
+
+.invert-effect {
+    filter: invert(100%);
+}
+
+@keyframes flash-red {
+    0% {
+        background-color: rgba(255, 0, 0, 0.5);
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+.flash-red-effect {
+    animation: flash-red 0.5s ease-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+    box-shadow: inset 0 0 50px #ff0000;
+}
+
+#intercept-screen {
+    background: rgba(0, 0, 0, 0.95);
+    padding: 40px;
+    border-radius: 10px;
+    border: 2px solid #ff0055;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 100;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.glitch-effect {
+    animation: glitch-anim 0.2s infinite;
+}
+
+@keyframes glitch-anim {
+    0% {
+        transform: translate(0);
+        filter: drop-shadow(-2px 0 #ff0000) drop-shadow(2px 0 #00ffff);
+    }
+
+    25% {
+        transform: translate(-2px, 1px);
+        filter: drop-shadow(-2px 0 #00ffff) drop-shadow(2px 0 #ff0000);
+    }
+
+    50% {
+        transform: translate(1px, -1px);
+        filter: drop-shadow(2px 0 #00ff00) drop-shadow(-2px 0 #ff00ff);
+    }
+
+    75% {
+        transform: translate(-1px, 2px);
+        filter: drop-shadow(-1px 0 #ff0000) drop-shadow(1px 0 #0000ff);
+    }
+
+    100% {
+        transform: translate(0);
+        filter: drop-shadow(0 0 transparent);
+    }
+}
+
+/* Surprise Overlay & Effects */
+#surprise-overlay {
+    background: rgba(0, 0, 0, 0.95);
+    padding: 40px;
+    border-radius: 10px;
+    border: 3px solid #ff0055;
+    pointer-events: auto;
+    cursor: auto;
+    z-index: 200;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 0, 85, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes flash-white {
+    0% {
+        background-color: white;
+        opacity: 1;
+    }
+
+    100% {
+        background-color: transparent;
+        opacity: 0;
+    }
+}
+
+.flash-white-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 300;
+    pointer-events: none;
+    animation: flash-white 3s ease-out forwards;
+}
