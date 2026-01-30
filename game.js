@@ -52,8 +52,7 @@ function handleInput(e) {
         startGame();
     } else if (currentState === STATE.PLAYING) {
         player.flipDirection();
-    } else if (currentState === STATE.GAMEOVER) {
-        resetGame();
+
     } else if (currentState === STATE.EGG_INTERACTION) {
         // Check if click/tap is on the egg
         // Egg is at center (centerX, centerY) with radius ~80
@@ -591,6 +590,12 @@ if (startBtn) startBtn.addEventListener('click', (e) => {
     bgm.play().catch(e => console.error("Start BGM Fail:", e));
 
     startGame();
+});
+
+const restartBtn = document.getElementById('restart-btn');
+if (restartBtn) restartBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    resetGame();
 });
 
 
